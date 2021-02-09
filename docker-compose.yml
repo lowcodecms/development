@@ -2,7 +2,7 @@ version: "3.4"
 services:  
   nginx:
     image: ghcr.io/solutas/soluneo/solcache:development
-    container_name: solcache-prod-$rand
+    container_name: solcache-prod
     volumes:
       - ./files:/data/files
       - ./projects:/data/projects                
@@ -13,15 +13,15 @@ services:
       - "80:80"
   webapp:
     image: ghcr.io/solutas/soluneo/solui:development
-    container_name: solui-prod-$rand
-    ports:
-      - "3001:3001"
+    container_name: solui-prod
+    expose:
+      - "3001"
     stdin_open: true          
     depends_on:
       - server
   server:
     image: ghcr.io/solutas/soluneo/server:development
-    container_name: solserver-prod-$rand
+    container_name: solserver-prod
     volumes:
     - ./files:/home/files
     - ./packages:/home/packages
@@ -30,15 +30,15 @@ services:
     - REDIS_URL=redis://redis-yaj
     - ES_URL=http://es01:9200    
     - GOOGLE_APPLICATION_CREDENTIALS=/home/config/nghelvetia-afc5d9885d0d.json  
-    ports:
-    - "8080:8080"
+    expose:
+    - "8080"
     depends_on:
       mongo:
         condition: service_healthy
     #- es01
   muli:    
     image: ghcr.io/solutas/soluneo/solqueue:development
-    container_name: solqueue-prod-$rand
+    container_name: solqueue-prod
     volumes:
     - ./files:/home/files
     - ./actions:/home/actions
@@ -48,15 +48,15 @@ services:
     - server
   redis:
     image: redis:latest
-    container_name: redis-yaj-$rand    
+    container_name: redis-yaj
     volumes:
        - ./redis-data:/var/lib/redis
-    ports:
-    - "6379:6379"    
+    expose:
+    - "6379"    
   mongo:
     image: mongo
-    ports:
-    - "27017:27017"
+    expose:
+    - "27017"
     environment:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null      
