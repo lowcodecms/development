@@ -2,10 +2,13 @@ version: "3.4"
 services:  
   nginx:
     image: ghcr.io/solutas/soluneo/solcache:development
-    container_name: solcache-prod
+    container_name: solcache-prod-$rand
     volumes:
       - ./files:/data/files
-      - ./projects:/data/projects                
+      - ./projects:/data/projects    
+    environment: 
+      - API_SERVER_URL=solserver-prod-$rand:8080            
+      - WEBAPP_SERVER_URL=yajui-prod-$rand:3001
     depends_on:
       - server
       - webapp
@@ -13,7 +16,7 @@ services:
       - "80:80"
   webapp:
     image: ghcr.io/solutas/soluneo/solui:development
-    container_name: solui-prod
+    container_name: yajui-prod-$rand
     expose:
       - "3001"
     stdin_open: true          
@@ -21,13 +24,14 @@ services:
       - server
   server:
     image: ghcr.io/solutas/soluneo/server:development
-    container_name: solserver-prod
+    container_name: solserver-prod-$rand
     volumes:
     - ./files:/home/files
     - ./packages:/home/packages
     - ./config:/home/config
     environment:
-    - REDIS_URL=redis://redis-yaj
+    - REDIS_URL=redis://redis-yaj-$rand
+    - MONGO_URL=mongodb://mongo-yaj-$rand
     - ES_URL=http://es01:9200    
     - GOOGLE_APPLICATION_CREDENTIALS=/home/config/nghelvetia-afc5d9885d0d.json  
     expose:
@@ -35,26 +39,16 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
-    #- es01
-  muli:    
-    image: ghcr.io/solutas/soluneo/solqueue:development
-    container_name: solqueue-prod
-    volumes:
-    - ./files:/home/files
-    - ./actions:/home/actions
-    environment:
-    - REDIS_URL=redis://redis-yaj        
-    depends_on:    
-    - server
   redis:
     image: redis:latest
-    container_name: redis-yaj
+    container_name: redis-yaj-$rand
     volumes:
        - ./redis-data:/var/lib/redis
     expose:
     - "6379"    
   mongo:
     image: mongo
+    container_name: mongo-yaj-$rand
     expose:
     - "27017"
     environment:
