@@ -30,7 +30,7 @@ services:
     - ./packages:/home/packages
     - ./config:/home/config
     environment:
-    - REDIS_URL=redis://redis-yaj-$rand
+    - REDIS_URL=redis://redis
     - MONGO_URL=mongodb://mongo-yaj-$rand
     - ES_URL=http://es01:9200    
     - GOOGLE_APPLICATION_CREDENTIALS=/home/config/nghelvetia-afc5d9885d0d.json  
