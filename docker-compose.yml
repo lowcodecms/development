@@ -29,6 +29,7 @@ services:
     - ./files:/home/files
     - ./packages:/home/packages
     - ./config:/home/config
+    - ./actions:/home/actions
     environment:
     - REDIS_URL=redis://redis
     - MONGO_URL=mongodb://mongo-yaj-$rand
