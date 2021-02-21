@@ -40,6 +40,25 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+  delivery:
+    image: ghcr.io/solutas/soluneo/delivery:development
+    container_name: soldelivery-prod-$rand
+    volumes:
+    - ./files:/home/files
+    - ./packages:/home/packages
+    - ./config:/home/config
+    - ./actions:/home/actions
+    environment:
+    - REDIS_URL=redis://redis-yaj 
+    - MONGO_URL=mongodb://mongo-yaj-$rand
+    - PORT=1619
+    - ES_URL=http://es01:9200    
+    - GOOGLE_APPLICATION_CREDENTIALS=/home/config/nghelvetia-afc5d9885d0d.json  
+    expose:
+    - "1619:1619"
+    depends_on:
+    - mongo
+    - redis              
   redis:
     image: redis:latest
     container_name: redis-yaj-$rand
