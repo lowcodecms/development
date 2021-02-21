@@ -49,7 +49,7 @@ services:
     - ./config:/home/config
     - ./actions:/home/actions
     environment:
-    - REDIS_URL=redis://redis-yaj 
+    - REDIS_URL=redis://redis-yaj-$rand
     - MONGO_URL=mongodb://mongo-yaj-$rand
     - PORT=1619
     - ES_URL=http://es01:9200    
