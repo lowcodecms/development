@@ -57,8 +57,7 @@ services:
     expose:
     - "1619"
     depends_on:
-    - mongo
-    - redis              
+    - server
   redis:
     image: redis:latest
     container_name: redis-yaj-$rand
