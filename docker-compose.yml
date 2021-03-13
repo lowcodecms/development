@@ -1,10 +1,11 @@
 version: "3.4"
 services:  
   nginx:
-    image: ghcr.io/solutas/soluneo/solcache:development
+    image: ghcr.io/solutas/soluneo/solcache:production-development
     container_name: solcache-prod-$rand
     volumes:
       - ./files:/data/files
+      - ./config:/home/config
       - ./projects:/data/projects    
     environment: 
       - API_SERVER_URL=solserver-prod-$rand:8080            
@@ -15,7 +16,7 @@ services:
     ports:
       - "80:80"
   webapp:
-    image: ghcr.io/solutas/soluneo/solui:development
+    image: ghcr.io/solutas/soluneo/solui:production
     container_name: yajui-prod-$rand
     expose:
       - "3001"
@@ -23,7 +24,7 @@ services:
     depends_on:
       - server
   server:
-    image: ghcr.io/solutas/soluneo/server:development
+    image: ghcr.io/solutas/soluneo/server:production
     container_name: solserver-prod-$rand
     volumes:
     - ./files:/home/files
@@ -41,7 +42,7 @@ services:
       mongo:
         condition: service_healthy
   delivery:
-    image: ghcr.io/solutas/soluneo/delivery:development
+    image: ghcr.io/solutas/soluneo/delivery:production
     container_name: soldelivery-prod-$rand
     volumes:
     - ./files:/home/files
@@ -84,5 +85,3 @@ services:
       timeout: 10s
       retries: 3
       start_period: 5s
-
-# -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD
