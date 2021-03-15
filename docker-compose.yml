@@ -40,8 +40,8 @@ services:
     expose:
     - "8080"
     depends_on:
-      mongo:
-        condition: service_healthy
+      - mongo
+      - redis
   delivery:
     image: ghcr.io/solutas/soluneo/delivery:production
     container_name: soldelivery-prod-$rand
