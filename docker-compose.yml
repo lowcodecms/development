@@ -8,13 +8,15 @@ services:
       - ./config:/home/config
       - ./projects:/data/projects    
     environment: 
-      - API_SERVER_URL=solserver-prod-$rand:8080            
-      - WEBAPP_SERVER_URL=yajui-prod-$rand:3001
+      - API_SERVER_URL=solserver-prod:8080
+      - WEBAPP_SERVER_URL=yajui-prod:3001
+      - DELIVERY_SERVER_URL=soldelivery-prod:1619
     depends_on:
       - server
       - webapp
     ports:
       - "80:80"
+      - "443:443"
   webapp:
     image: ghcr.io/solutas/soluneo/solui:production
     container_name: yajui-prod-$rand
@@ -34,7 +36,6 @@ services:
     environment:
     - REDIS_URL=redis://redis
     - MONGO_URL=mongodb://mongo-yaj-$rand
-    - ES_URL=http://es01:9200    
     - GOOGLE_APPLICATION_CREDENTIALS=/home/config/nghelvetia-afc5d9885d0d.json  
     expose:
     - "8080"
@@ -45,6 +46,7 @@ services:
     image: ghcr.io/solutas/soluneo/delivery:production
     container_name: soldelivery-prod-$rand
     volumes:
+    - ./delivery-server:/home/server
     - ./files:/home/files
     - ./packages:/home/packages
     - ./config:/home/config
