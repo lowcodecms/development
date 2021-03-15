@@ -8,9 +8,9 @@ services:
       - ./config:/home/config
       - ./projects:/data/projects    
     environment: 
-      - API_SERVER_URL=solserver-prod:8080
-      - WEBAPP_SERVER_URL=yajui-prod:3001
-      - DELIVERY_SERVER_URL=soldelivery-prod:1619
+      - API_SERVER_URL=solserver-prod-$rand:8080
+      - WEBAPP_SERVER_URL=yajui-prod-$rand:3001
+      - DELIVERY_SERVER_URL=soldelivery-prod-$rand:1619
     depends_on:
       - server
       - webapp
