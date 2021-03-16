@@ -40,13 +40,12 @@ services:
     expose:
     - "8080"
     depends_on:
-      - mongo
-      - redis
+      mongo:
+        condition: service_healthy
   delivery:
     image: ghcr.io/solutas/soluneo/delivery:production
     container_name: soldelivery-prod-$rand
     volumes:
-    - ./delivery-server:/home/server
     - ./files:/home/files
     - ./packages:/home/packages
     - ./config:/home/config
@@ -72,10 +71,18 @@ services:
     image: mongo
     container_name: mongo-yaj-$rand
     expose:
-    - "27017"    
+    - "27017"
     environment:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null      
     volumes:
       - ./data:/data/db:rw
     restart: always
+    depends_on:
+      - redis
+    healthcheck:
+      test: echo 'db.runCommand({serverStatus:1}).ok' | mongo admin  --quiet | grep 1
+      interval: 260s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
